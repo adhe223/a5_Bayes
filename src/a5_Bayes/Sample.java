@@ -8,20 +8,22 @@ public class Sample {
 	public boolean boolM;
 	
 	public boolean getCorrBool(String var) {
-		if (var == "B") {
+		if (var.equals("B")) {
 			return boolB;
 		}
-		else if (var == "E"){
+		else if (var.equals("E")){
 			return boolE;
 		}
-		else if (var == "A"){
+		else if (var.equals("A")){
 			return boolA;
 		}
-		else if (var == "J"){
+		else if (var.equals("J")){
 			return boolJ;
 		}
-		else {
+		else if (var.equals("M")){
 			return boolM;
+		} else {
+			throw new RuntimeException(var + " is not a valid var!");
 		}
 	}
 	

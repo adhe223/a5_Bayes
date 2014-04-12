@@ -9,6 +9,7 @@ public class Driver {
 	private static final int NUM_SAMPLES = 500000;
 	private static Random random = new Random();
 	private static ArrayList<String> varSpace = new ArrayList<String>();
+	private static String command = "";
 	
 	public static void main(String[] args) {
 		//Fill list of possible variables
@@ -22,7 +23,15 @@ public class Driver {
 		
 		//Handle the command line input: True = 1, False = 0, GivenTrue = 2, GivenFalse = -2, Don't Care = -1
 		HashMap<String, Integer> inArgs = new HashMap<String, Integer>();
+		HashMap<String, Integer> manualArgs = new HashMap<String, Integer>();
 		boolean given = false;
+	
+		//Build the whole command string to be displayed later
+		for (String str : args) {
+			if (!str.equals("bnet")) {
+				command = command + str + " ";
+			}
+		}
 		
 		for (String str : args) {
 			if (!str.equals("bnet") && !str.equals("given") && !given) {
@@ -34,7 +43,8 @@ public class Driver {
 					value = 0;
 				}
 				
-				inArgs.put(str.substring(0, 1), value);
+				String key = str.substring(0, 1);
+				inArgs.put(key, value);
 			} else if (!str.equals("bnet") && !str.equals("given") && given) {
 				//This is a given argument to set
 				int value;
@@ -44,7 +54,8 @@ public class Driver {
 					value = -2;
 				}
 				
-				inArgs.put(str.substring(0, 1), value);
+				String key = str.substring(0, 1);
+				inArgs.put(key, value);
 			} else if (str.equals("given")) {
 				given = true;
 			}
@@ -57,10 +68,7 @@ public class Driver {
 			}
 		}
 		
-		//Debug
-		System.out.println(inArgs);
-		
-		System.out.println(getProb(inArgs, given));
+		System.out.println("The probability of " + command + "is: " + getProb(inArgs, given));
 	}
 	
 	public static void doSamples() {
@@ -219,6 +227,8 @@ public class Driver {
 				//Enter an if block if all of the given variables match
 				boolean allMatch = true;
 				for (String str : givens) {
+					boolean sbool = s.getCorrBool(str);
+					boolean argbool = intToBool(args.get(str));
 					if ((s.getCorrBool(str) != intToBool(args.get(str))) && allMatch) {		//If allMatch is false then we can fall through
 						allMatch = false;
 					}
